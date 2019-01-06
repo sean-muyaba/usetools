@@ -12,6 +12,7 @@ unorganised_path = "/media/sean/GoFlex Home/music/inbox/soundcloud/new"
 logfile_path = "/home/sean/logs/organise.log"
 sort_tag = "album"
 deli = ","
+del_tag = "del"
 
 # dictionary with the full dir names
 dir_name = {"ac": "acid", "ba": "base", "bo": "bouncy", "da": "dance", "de": "deep", "di": "disco", "dr": "drum & base", "ga": "garage", "ge": "gem", "kb": "k&b", "ml": "mellow", "md": "melodic", "po": "pop", "th": "tech house", "te": "techno", "tr": "trance"}
@@ -126,6 +127,11 @@ def main():
             # process tags from list
             for tag in tags:
                 tag_len = len(tag)
+                # check if command is delete
+                if tag == del_tag:
+                    print("Deleting file {file}".format(file=tune))
+                    os.remove(tune)
+                # check is command is move
                 if tag_len >= 4:
                     # check if command is nove
                     new_addr = get_new_dir(tag)
