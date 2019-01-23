@@ -13,11 +13,12 @@ logfile_path = "/home/sean/logs/organise.log"
 sort_tag = "album"
 deli = ","
 del_tag = "del"
+rate_tag = "s"
 
 # dictionary with the full dir names
 dir_name = {"ac": "acid", "ba": "base", "bo": "bouncy", "da": "dance", "de": "deep", "di": "disco", "dr": "drum & base", "ga": "garage", "ge": "gem", "kb": "k&b", "ml": "mellow", "md": "melodic", "po": "pop", "th": "tech house", "te": "techno", "tr": "trance"}
 # dictonary with sub dir's 
-sub_name = {"da": "dark", "dab": "dark (beat)", "de": "deep", "dep": "deep (beat)", "ge": "gem", "geb": "gem (beat)", "hi": "high", "hib": "high (beat)", "lo": "low", "lob": "low (beat)", "mi": "mid", "mib": "mid (beat)", "ro": "rolling","lf": "lofi", "lfb": "lofi (beat)", "po": "pop"}
+sub_name = {"da": "dark", "dab": "dark (beat)", "de": "deep", "dep": "deep (beat)", "ge": "gem", "geb": "gem (beat)", "hi": "high", "hib": "high (beat)", "lo": "low", "lob": "low (beat)", "mi": "mid", "mib": "mid (beat)", "ro": "rolling","lf": "lofi", "lfb": "lofi (beat)", "po": "pop", "bo": "bouncy"}
 
 
 def get_args():
@@ -71,11 +72,13 @@ def set_tag_value(song_path, tag, value):
     Function will set value for a tag
     """
     tag_set = False
-    song = eyed3.load(song_path)
-    tag = getattr(song.tag, tag)
+    #song = eyed3.load(song_path)
+    print("ssong is {}".format(song_path))
+    tag = getattr(song_path, tag)
+    print("tag attr is {} and value is {}".format(tag, value))
     if tag:
         tag = value
-        song.tag.save()
+        song_path.tag.save()
         tag_set = True
 
     return tag_set
@@ -122,34 +125,43 @@ def main():
     # loop through files and print tags
     for tune in file_list:
         tags = get_song_tags(tune, args.tag, args.delimiter)
+        song_obj = eyed3.load(tune)
         if tags:
             print("Found tags {tags} for {song}".format(tags=tags, song=tune))
             # process tags from list
             for tag in tags:
-                tag_len = len(tag)
+                tag_lower = tag.lower()
+                tag_len = len(tag_lower)
                 # check if command is delete
-                if tag == del_tag:
+                if tag_lower == del_tag:
                     print("Deleting file {file}".format(file=tune))
                     os.remove(tune)
                 # check is command is move
                 if tag_len >= 4:
                     # check if command is nove
-                    new_addr = get_new_dir(tag)
+                    new_addr = get_new_dir(tag_lower)
                     print("extracted address is {}".format(new_addr))
                     if new_addr:
                         # get the new address
                         new_addr = "{base}/{folder}/{name}".format(base=args.collection, folder=new_addr, name=tune)
                         print("new address is {}".format(new_addr))
-                        # write any remaining tags to file 
+                        # write any remaining tags to file
                         tags.remove(tag)
                         # TODO set tag not working for now 
-                        set_tag_value(tune, args.tag, tag)
+                        #set_tag_value(tune, args.tag, tag_lower)
                         # move file
                         tune = "{}/{}".format(args.unorganised, tune)
                         shutil.move(tune, new_addr)
-                        break
-                    else:
-                        logger.info("Couldn't process tag {tag} in {song}".format(tag=tag, song=tune))
+                # check if command is rating
+                if tag_len == 2 and tag.startswith(rate_tag):
+                    rating = int(tag_lower[1:])
+                    song_obj.tag.track_num = rating
+                    song_obj.tag.save()
+                    set_rate = song_obj.tag.track_num
+                    print("rating for {song} set to {rate}".format(song=tune, rate=set_rate))
+
+                else:
+                    logger.info("Couldn't process tag \"{tag}\" in {song}".format(tag=tag, song=tune))
 
 
 main()
