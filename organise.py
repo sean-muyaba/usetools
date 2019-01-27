@@ -4,11 +4,12 @@ import argparse
 import logging
 import shutil
 import eyed3
+import glob
 import os
 
 # script defaults
 collection_path = "/media/sean/GoFlex Home/music/tech & house"
-unorganised_path = "/media/sean/GoFlex Home/music/inbox/soundcloud/new"
+unorganised_path = "/media/sean/GoFlex Home/music" #/inbox/soundcloud/new"
 logfile_path = "/home/sean/logs/organise.log"
 sort_tag = "album"
 deli = ","
@@ -38,8 +39,8 @@ def get_dir_files(path, log):
     """
     Fucntion will return the files in a given directory as a list
     """
-    files = os.listdir(path)
-    log.debug("checking dir {path} and found {num} files".format(path=path, num=len(files)))
+    files = glob.iglob(path + "/**", recursive=True)
+    #log.debug("checking dir {path} and found {num} files".format(path=path, num=len(files)))
     return files
 
 def get_song_tags(song_path, tag_to_check, delimiter):
@@ -62,9 +63,15 @@ def get_tag_object(song_path, tag_to_check):
     """
     Function returns an object for a songs tag
     """
-    song = eyed3.load(song_path)
+    tag_obj = None
+    try:
+        if os.path.isfile(song_path):
+            song = eyed3.load(song_path)
+            tag_obj = getattr(song.tag, tag_to_check)
+    except OSError:
+        pass
     # return the object
-    return getattr(song.tag, tag_to_check)
+    return tag_obj
 
 
 def set_tag_value(song_path, tag, value):
@@ -122,10 +129,15 @@ def main():
     os.chdir(args.unorganised)
     # get a list of files to run the sort on 
     file_list = get_dir_files(args.unorganised, logger)
+    # debug line
+    print("found following files {}".format(file_list))
     # loop through files and print tags
     for tune in file_list:
         tags = get_song_tags(tune, args.tag, args.delimiter)
-        song_obj = eyed3.load(tune)
+        if os.path.isfile(tune):
+            song_obj = eyed3.load(tune)
+        else:
+            print("{file} is not file".format(file=tune))
         if tags:
             print("Found tags {tags} for {song}".format(tags=tags, song=tune))
             # process tags from list
@@ -142,15 +154,17 @@ def main():
                     new_addr = get_new_dir(tag_lower)
                     print("extracted address is {}".format(new_addr))
                     if new_addr:
+                        # get file name 
+                        name = tune.split("/")[-1]
                         # get the new address
-                        new_addr = "{base}/{folder}/{name}".format(base=args.collection, folder=new_addr, name=tune)
-                        print("new address is {}".format(new_addr))
+                        new_addr = "{base}/{folder}/{name}".format(base=args.collection, folder=new_addr, name=name)
+                        print("new address is {} and file name is {}".format(new_addr, name))
                         # write any remaining tags to file
                         tags.remove(tag)
                         # TODO set tag not working for now 
                         #set_tag_value(tune, args.tag, tag_lower)
                         # move file
-                        tune = "{}/{}".format(args.unorganised, tune)
+                        #tune = "{}/{}".format(args.unorganised, tune)
                         shutil.move(tune, new_addr)
                 # check if command is rating
                 if tag_len == 2 and tag.startswith(rate_tag):
