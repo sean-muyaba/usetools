@@ -1,5 +1,6 @@
 #!/usr/bin/python3
 
+from pathlib import Path
 import argparse
 import logging
 import shutil
@@ -133,6 +134,13 @@ def main():
     print("found following files {}".format(file_list))
     # loop through files and print tags
     for tune in file_list:
+        # get list with path variables
+        tune_path = tune.split("/")
+        # get file name
+        tune = tune_path.pop()
+        tune_path.insert(0,"/")
+        tune_path = os.path.join("", *tune_path)
+        os.chdir(os.path.join("", tune_path))
         tags = get_song_tags(tune, args.tag, args.delimiter)
         if os.path.isfile(tune):
             song_obj = eyed3.load(tune)
@@ -154,18 +162,18 @@ def main():
                     new_addr = get_new_dir(tag_lower)
                     print("extracted address is {}".format(new_addr))
                     if new_addr:
-                        # get file name 
-                        name = tune.split("/")[-1]
                         # get the new address
-                        new_addr = "{base}/{folder}/{name}".format(base=args.collection, folder=new_addr, name=name)
-                        print("new address is {} and file name is {}".format(new_addr, name))
+                        new_addr = os.path.join(args.collection, new_addr)
+                        if new_addr in tune_path:
+                            print("{} already in dir".format(tune))
+                            break
+                        print("new address is {} and file name is {}".format(new_addr, tune))
                         # write any remaining tags to file
                         tags.remove(tag)
                         # TODO set tag not working for now 
                         #set_tag_value(tune, args.tag, tag_lower)
                         # move file
-                        #tune = "{}/{}".format(args.unorganised, tune)
-                        shutil.move(tune, new_addr)
+                        shutil.move(os.path.join(tune), new_addr)
                 # check if command is rating
                 if tag_len == 2 and tag.startswith(rate_tag):
                     rating = int(tag_lower[1:])
