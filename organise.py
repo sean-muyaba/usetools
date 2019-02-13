@@ -20,7 +20,7 @@ rate_tag = "s"
 # dictionary with the full dir names
 dir_name = {"ac": "acid", "ba": "base", "bo": "bouncy", "da": "dance", "de": "deep", "di": "disco", "dr": "drum & base", "ga": "garage", "ge": "gem", "kb": "k&b", "ml": "mellow", "md": "melodic", "po": "pop", "th": "tech house", "te": "techno", "tr": "trance"}
 # dictonary with sub dir's 
-sub_name = {"da": "dark", "dab": "dark (beat)", "de": "deep", "dep": "deep (beat)", "ge": "gem", "geb": "gem (beat)", "hi": "high", "hib": "high (beat)", "lo": "low", "lob": "low (beat)", "mi": "mid", "mib": "mid (beat)", "ro": "rolling","lf": "lofi", "lfb": "lofi (beat)", "po": "pop", "bo": "bouncy"}
+sub_name = {"da": "dark", "dab": "dark (beat)", "de": "deep", "dep": "deep (beat)", "ge": "gem", "geb": "gem (beat)", "hi": "high", "hib": "high (beat)", "lo": "low", "lob": "low (beat)", "mi": "mid", "mib": "mid (beat)", "ro": "rolling","lf": "lofi", "lfb": "lofi (beat)", "po": "pop", "bo": "bouncy", "ln": "lounge"}
 
 
 def get_args():
