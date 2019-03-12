@@ -9,18 +9,23 @@ import glob
 import os
 
 # script defaults
-collection_path = "/media/sean/GoFlex Home/music/tech & house"
-unorganised_path = "/media/sean/GoFlex Home/music" #/inbox/soundcloud/new"
-logfile_path = "/home/sean/logs/organise.log"
-sort_tag = "album"
+collection_path = "/home/sean/Music/music/tech & house"
+unorganised_path = "/home/sean//Music/music/inbox"
+logfile_path = "/home/sean//Music/music/inbox/organise.log"
 deli = ","
 del_tag = "del"
 rate_tag = "s"
+sort_tag = "album"
 
 # dictionary with the full dir names
-dir_name = {"ac": "acid", "ba": "base", "bo": "bouncy", "da": "dance", "de": "deep", "di": "disco", "dr": "drum & base", "ga": "garage", "ge": "gem", "kb": "k&b", "ml": "mellow", "md": "melodic", "po": "pop", "th": "tech house", "te": "techno", "tr": "trance"}
+dir_name = {"ac": "acid", "ba": "base", "bo": "bouncy", "da": "dance", "de": "deep", "di": "disco",
+             "dr": "drum & base", "ga": "garage", "ge": "gem", "kb": "k&b", "ml": "mellow", "md": "melodic", 
+             "po": "pop", "th": "tech house", "te": "techno", "tr": "trance"}
 # dictonary with sub dir's 
-sub_name = {"da": "dark", "dab": "dark (beat)", "de": "deep", "dep": "deep (beat)", "ge": "gem", "geb": "gem (beat)", "hi": "high", "hib": "high (beat)", "lo": "low", "lob": "low (beat)", "mi": "mid", "mib": "mid (beat)", "ro": "rolling","lf": "lofi", "lfb": "lofi (beat)", "po": "pop", "bo": "bouncy", "ln": "lounge"}
+sub_name = {"da": "dark", "dab": "dark (beat)", "de": "deep", "dep": "deep (beat)", "ge": "gem",
+            "geb": "gem (beat)", "hi": "high", "hib": "high (beat)", "lo": "low", "lob": "low (beat)",
+             "mi": "mid", "mib": "mid (beat)", "ro": "rolling","lf": "lofi", "lfb": "lofi (beat)",
+             "po": "pop", "bo": "bouncy", "ln": "lounge", "ml": "melodic"}
 
 
 def get_args():

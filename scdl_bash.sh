@@ -9,11 +9,15 @@ echo "*******************************************************"
 echo "*******************************************************"
 echo "               Running scdl                             "
 echo "*******************************************************"
-/usr/bin/python3 /home/sean/.local/bin/scdl -l https://soundcloud.com/sean-muyaba -f --download-archive /home/sean/archive --addtofile --no-playlist-folder -c --path /media/sean/GoFlex\ Home/music/inbox/soundcloud/new/ >> /home/sean/logs/scdl.log
+/usr/bin/python3 /usr/local/bin/scdl -l https://soundcloud.com/sean-muyaba -f --download-archive /home/sean/Documents/usetools/archive --addtofile --no-playlist-folder -c --path /home/sean/Music/music/inbox >> /home/sean/Music/music/inbox/scdl.log
 echo "*******************************************************"
-echo "                                             "
+echo "            Sorting new music                          "
 echo "*******************************************************"
-/usr/bin/python3 /home/sean/usetools/organise.py 
+/usr/bin/python3 /home/sean/Documents/usetools/organise.py 
+echo "*******************************************************"
+echo "            Sorting music library                      "
+echo "*******************************************************"
+/usr/bin/python3 /home/sean/Documents/usetools/organise.py --unorganised "/home/sean/Music/music/tech & house"
 echo "*******************************************************"
 echo "            SYNCING MUSIC TO SERVER                    "
 echo "*******************************************************"
@@ -21,7 +25,7 @@ echo "*******************************************************"
 echo "*******************************************************"
 echo "            SYNCING SERVER TO MUSIC                   "
 echo "*******************************************************"
-/usr/bin/rsync -avzh --delete /media/sean/GoFlex\ Home/music/ /home/sean/Music
+#/usr/bin/rsync -avzh --delete /media/sean/GoFlex\ Home/music/ /home/sean/Music
 
 
 
